@@ -8,4 +8,10 @@
         属性中 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
+    <!--分页插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <property name="helperDialet" value="mysql"/>
+        </plugin>
+    </plugins>
 </configuration>

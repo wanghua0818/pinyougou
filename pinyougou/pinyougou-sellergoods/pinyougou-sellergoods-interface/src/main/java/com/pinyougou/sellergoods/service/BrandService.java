@@ -10,4 +10,6 @@ public interface BrandService {
      * @return
      */
     List<TbBrand> queryAll();
+
+    List<TbBrand> testPage(Integer page, Integer rows);
 }
