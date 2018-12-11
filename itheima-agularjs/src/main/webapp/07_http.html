@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJs测试</title>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("app", []);
+        app.controller("mycontroller", function ($scope, $http) {
+            $scope.findPersons = function () {
+                $http.get("data.json").success(function (data) {
+                    $scope.persons = data;
+                }).error(function (data) {
+                    alert(data)
+                })
+            }
+        })
+    </script>
+</head>
+<body ng-app="app" ng-controller="mycontroller" ng-init="findPersons()">
+<table>
+    <tr>
+        <td>姓名</td>
+        <td>位置</td>
+        <td>年龄</td>
+    </tr>
+    <tr ng-repeat="p in persons">
+        <td>{{p.name}}</td>
+        <td>{{p.position}}</td>
+        <td>{{p.age}}</td>
+    </tr>
+</table>
+</body>
+</html>

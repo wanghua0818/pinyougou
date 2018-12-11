@@ -12,8 +12,10 @@
     <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="../plugins/angularjs/angular.min.js"></script>
+    <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+    <script src="../plugins/angularjs/pagination.js"></script>
     <script type="text/javascript">
-        var app = angular.module("pinyougou", []);
+        var app = angular.module("pinyougou", ["pagination"]);
         app.controller("brandController", function ($scope, $http) {
             $scope.findAll = function () {
                 $http.get("../brand/findAll.do").success(function (data) {
@@ -21,9 +23,36 @@
                 }).error(function () {
                     alert("加载数据失败")
                 })
+            };
+            //初始化分页导航条的信息
+            $scope.paginationConf={
+                //页号
+                currentPage:1,
+                //页大小
+                itemsPerPage:10,
+                //总记录数
+                totalItems:0,
+                //每页页大小选择
+                perPageOptions:[10,20,30,40,50],
+                //改变页号之后加载事件
+                onChange:function () {
+                    $scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+                }
             }
+            //根据分页信息查询
+            $scope.findPage = function (page, rows) {
+                $http.get("../brand/findPage.do?page=" + page + "&rows=" + rows).success(function (response) {
+                    //response 分页结果对象total,rows
+                    $scope.list = response.rows;
+                    //总记录数
+                    $scope.paginationConf.totalItems = response.total;
+
+                });
+
+            };
         })
     </script>
+
 
 </head>
 <body ng-app="pinyougou" ng-controller="brandController" class="hold-transition skin-red sidebar-mini" ng-init="findAll()">
@@ -86,7 +115,7 @@
 
     </div>
     <!-- 数据表格 /-->
-
+    <tm-pagination conf="paginationConf"/>
 
 </div>
 <!-- /.box-body -->
