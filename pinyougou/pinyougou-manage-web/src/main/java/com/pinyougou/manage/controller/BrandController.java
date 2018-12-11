@@ -56,4 +56,22 @@ public class BrandController {
         }
         return Result.fail("新增品牌失败");
     }
+
+    //../brand/findOne.do
+    @GetMapping("/findOne")
+    public TbBrand findOne(Long id) {
+        TbBrand tbBrand = brandService.findOne(id);
+        return tbBrand;
+    }
+
+    @PostMapping("update")
+    public Result update(@RequestBody TbBrand tbBrand) {
+        try {
+            brandService.update(tbBrand);
+            return Result.ok("修改数据成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("修改数据失败");
+    }
 }
