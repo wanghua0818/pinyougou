@@ -64,7 +64,7 @@ public class BrandController {
         return tbBrand;
     }
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public Result update(@RequestBody TbBrand tbBrand) {
         try {
             brandService.update(tbBrand);
@@ -73,5 +73,20 @@ public class BrandController {
             e.printStackTrace();
         }
         return Result.fail("修改数据失败");
+    }
+
+    /**
+     * 删除品牌
+     *
+     * @param ids 品牌id数组
+     * @return Result结果信息对象
+     */
+    @GetMapping("/delete")
+    public Result delete(Long[] ids) {
+        if (ids != null && ids.length > 0) {
+            brandService.deleteByIds(ids);
+            return Result.ok("删除品牌成功");
+        }
+        return Result.fail("删除品牌失败");
     }
 }

@@ -71,6 +71,32 @@
                     $scope.entity = response;
                 })
             }
+            $scope.selectedIds = [];
+            $scope.updateSelection = function ($event, id) {
+                if ($event.target.checked) {
+                    $scope.selectedIds.push(id)
+                } else {
+                    var index = $scope.selectedIds.indexOf(id);
+                    //删除位置，删除个数
+                    $scope.selectedIds.splice(index, 1);
+                }
+            }
+            $scope.delete = function () {
+                if ($scope.selectedIds.length < 1) {
+                    alert("请选择要删除的品牌");
+                    return;
+                }
+                if (confirm("确定要删除选中的记录吗？ ")) {
+                    $http.get("../brand/delete.do?ids=" + $scope.selectedIds).success(function (response) {
+                        if (response.success) {
+                            $scope.reloadList();
+                            $scope.selectedIds = [];
+                        } else {
+                            alert(response.message)
+                        }
+                    })
+                }
+            }
         })
     </script>
 
@@ -92,7 +118,7 @@
             <div class="form-group form-inline">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}"><i class="fa fa-file-o"></i> 新建</button>
-                    <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
+                    <button type="button" class="btn btn-default" title="删除" ng-click="delete()"><i class="fa fa-trash-o"></i> 删除</button>
                     <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                 </div>
             </div>
@@ -120,7 +146,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="b in list">
-                <td><input type="checkbox"></td>
+                <td><input type="checkbox" ng-click="updateSelection($event,b.id)"></td>
                 <td>{{b.id}}</td>
                 <td>{{b.name}}</td>
                 <td>{{b.firstChar}}</td>
