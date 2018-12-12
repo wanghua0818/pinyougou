@@ -35,10 +35,10 @@ public class BrandController {
     /**
      * ../brand/findPage.do?page=" + page + "&rows=" + rows
      */
-    @GetMapping("/findPage")
+   /* @GetMapping("/findPage")
     public PageResult findPage(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
         return brandService.findPage(page, rows);
-    }
+    }*/
 
     /**
      * 保存品牌
@@ -88,5 +88,10 @@ public class BrandController {
             return Result.ok("删除品牌成功");
         }
         return Result.fail("删除品牌失败");
+    }
+
+    @PostMapping("/search")
+    public PageResult search(@RequestBody TbBrand tbBrand, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer rows) {
+        return brandService.search(tbBrand,page,rows);
     }
 }

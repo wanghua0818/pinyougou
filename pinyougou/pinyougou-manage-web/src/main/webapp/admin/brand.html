@@ -40,9 +40,21 @@
                 }
             }
             $scope.reloadList = function () {
-                $scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+                //$scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+                $scope.search($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
             }
-            //根据分页信息查询
+            $scope.searchEntity={};
+            $scope.search = function (page, rows) {
+                $http.post("../brand/search.do?page=" + page + "&rows=" + rows, $scope.searchEntity).success(function (response) {
+                    //response 分页结果对象total,rows
+                    $scope.list = response.rows;
+                    //总记录数
+                    $scope.paginationConf.totalItems = response.total;
+
+                });
+
+            };
+         /*   //根据分页信息查询
             $scope.findPage = function (page, rows) {
                 $http.get("../brand/findPage.do?page=" + page + "&rows=" + rows).success(function (response) {
                     //response 分页结果对象total,rows
@@ -52,7 +64,7 @@
 
                 });
 
-            };
+            };*/
             $scope.add = function () {
                 var method = "add";
                 if ($scope.entity.id != null) {
@@ -125,8 +137,8 @@
         </div>
         <div class="box-tools pull-right">
             <div class="has-feedback">
-                品牌名称：<input> 品牌首字母：<input>
-                <button class="btn btn-default">查询</button>
+                品牌名称：<input ng-model="searchEntity.name"> 品牌首字母：<input ng-model="searchEntity.firstChar">
+                <button class="btn btn-default" ng-click="reloadList()">查询</button>
             </div>
         </div>
         <!--工具栏/-->
