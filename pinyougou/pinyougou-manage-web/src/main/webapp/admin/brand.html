@@ -14,105 +14,10 @@
     <script src="../plugins/angularjs/angular.min.js"></script>
     <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
     <script src="../plugins/angularjs/pagination.js"></script>
-    <script type="text/javascript">
-        var app = angular.module("pinyougou", ["pagination"]);
-        app.controller("brandController", function ($scope, $http) {
-            $scope.findAll = function () {
-                $http.get("../brand/findAll.do").success(function (data) {
-                    $scope.list = data;
-                }).error(function () {
-                    alert("加载数据失败")
-                })
-            };
-            //初始化分页导航条的信息
-            $scope.paginationConf = {
-                //页号
-                currentPage: 1,
-                //页大小
-                itemsPerPage: 10,
-                //总记录数
-                totalItems: 0,
-                //每页页大小选择
-                perPageOptions: [10, 20, 30, 40, 50],
-                //改变页号之后加载事件
-                onChange: function () {
-                    $scope.reloadList();
-                }
-            }
-            $scope.reloadList = function () {
-                //$scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
-                $scope.search($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
-            }
-            $scope.searchEntity={};
-            $scope.search = function (page, rows) {
-                $http.post("../brand/search.do?page=" + page + "&rows=" + rows, $scope.searchEntity).success(function (response) {
-                    //response 分页结果对象total,rows
-                    $scope.list = response.rows;
-                    //总记录数
-                    $scope.paginationConf.totalItems = response.total;
-
-                });
-
-            };
-         /*   //根据分页信息查询
-            $scope.findPage = function (page, rows) {
-                $http.get("../brand/findPage.do?page=" + page + "&rows=" + rows).success(function (response) {
-                    //response 分页结果对象total,rows
-                    $scope.list = response.rows;
-                    //总记录数
-                    $scope.paginationConf.totalItems = response.total;
-
-                });
-
-            };*/
-            $scope.add = function () {
-                var method = "add";
-                if ($scope.entity.id != null) {
-                    method = "update"
-                }
-                $http.post("../brand/" + method + ".do", $scope.entity).success(function (response) {
-                    if (response.success) {
-                        $scope.reloadList();
-                    } else {
-                        alert(response.message);
-                    }
-                })
-            }
-            $scope.findOne = function (id) {
-                $http.get("../brand/findOne.do?id=" + id).success(function (response) {
-                    $scope.entity = response;
-                })
-            }
-            $scope.selectedIds = [];
-            $scope.updateSelection = function ($event, id) {
-                if ($event.target.checked) {
-                    $scope.selectedIds.push(id)
-                } else {
-                    var index = $scope.selectedIds.indexOf(id);
-                    //删除位置，删除个数
-                    $scope.selectedIds.splice(index, 1);
-                }
-            }
-            $scope.delete = function () {
-                if ($scope.selectedIds.length < 1) {
-                    alert("请选择要删除的品牌");
-                    return;
-                }
-                if (confirm("确定要删除选中的记录吗？ ")) {
-                    $http.get("../brand/delete.do?ids=" + $scope.selectedIds).success(function (response) {
-                        if (response.success) {
-                            $scope.reloadList();
-                            $scope.selectedIds = [];
-                        } else {
-                            alert(response.message)
-                        }
-                    })
-                }
-            }
-        })
-    </script>
-
-
+    <script src="../js/base_pagination.js"></script>
+    <script src="../js/service/brandService.js"></script>
+    <script src="../js/controller/brandController.js"></script>
+    <script src="../js/controller/baseController.js"></script>
 </head>
 <body ng-app="pinyougou" ng-controller="brandController" class="hold-transition skin-red sidebar-mini">
 <!-- .box-body -->

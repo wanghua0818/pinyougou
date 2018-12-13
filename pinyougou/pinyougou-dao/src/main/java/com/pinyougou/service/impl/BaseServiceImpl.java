@@ -14,6 +14,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     @Autowired
     private Mapper<T> mapper;
 
+
     /**
      * 根据主键查询
      *

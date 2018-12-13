@@ -48,13 +48,17 @@ public class BrandController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody TbBrand tbBrand) {
+        System.out.println(tbBrand.getName());
+        System.out.println(tbBrand.getFirstChar());
         try {
-            brandService.add(tbBrand);
-            return Result.ok("新增品牌成功");
+            if (tbBrand.getName() != null && tbBrand.getFirstChar() != null) {
+                brandService.add(tbBrand);
+                return Result.ok("新增品牌成功");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail("新增品牌失败");
+        return Result.fail("新增品牌失败,请检查品牌格式或者网络问题");
     }
 
     //../brand/findOne.do
@@ -92,6 +96,6 @@ public class BrandController {
 
     @PostMapping("/search")
     public PageResult search(@RequestBody TbBrand tbBrand, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer rows) {
-        return brandService.search(tbBrand,page,rows);
+        return brandService.search(tbBrand, page, rows);
     }
 }
