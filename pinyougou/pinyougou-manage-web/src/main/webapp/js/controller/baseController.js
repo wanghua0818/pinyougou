@@ -48,4 +48,15 @@ app.controller("baseController", function ($scope) {
             $scope.selectedIds.splice(index, 1);
         }
     };
+    $scope.jsonToString = function (jsonStr, key) {
+        var str = ""
+        var jsonArray = JSON.parse(jsonStr);
+        for (var i = 0; i < jsonArray.length; i++) {
+            if (i > 0) {
+                str += ","
+            }
+            str += jsonArray[i][key];
+        }
+        return str;
+    };
 })

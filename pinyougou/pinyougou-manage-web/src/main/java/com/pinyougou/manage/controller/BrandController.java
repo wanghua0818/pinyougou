@@ -8,12 +8,24 @@ import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/brand")
 @RestController
 public class BrandController {
     @Reference
     private BrandService brandService;
+
+    /**
+     * 加载select2品牌列表
+     * 格式：[{id:'1',text:'联想'},{id:'2',text:'华为'}]
+     *
+     * @return
+     */
+    @GetMapping("/selectOptionList")
+    public List<Map<String, String>> selectOptionList() {
+       return brandService.selectOptionList();
+    }
 
     @GetMapping("/findAll")
     public List<TbBrand> findAll() {

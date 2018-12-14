@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
+import java.util.Map;
 
 //该service注解是dubbo的，不是spring的
 @Service(interfaceClass = BrandService.class)
@@ -54,6 +55,11 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
         PageInfo<TbBrand> pageInfo = new PageInfo<>(tbBrandList);
         PageResult pageResult = new PageResult(pageInfo.getTotal(), pageInfo.getList());
         return pageResult;
+    }
+
+    @Override
+    public List<Map<String, String>> selectOptionList() {
+        return brandMapper.selectOptionList();
     }
 
 

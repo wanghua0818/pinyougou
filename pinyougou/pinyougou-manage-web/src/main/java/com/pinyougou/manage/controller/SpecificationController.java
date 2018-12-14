@@ -9,6 +9,7 @@ import com.pinyougou.vo.Specification;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/specification")
 @RestController
@@ -16,7 +17,13 @@ public class SpecificationController {
 
     @Reference
     private SpecificationService specificationService;
-
+    /**
+     * "../specification/selectOptionList.do"
+     */
+    @GetMapping("/selectOptionList")
+    public List<Map<String,String>> selectOptionList(){
+        return specificationService.selectOptionList();
+    }
     /**
      * 通过id查询得到规格和规格选项列表
      *
