@@ -14,7 +14,27 @@ app.controller("baseController", function ($scope) {
             $scope.reloadList();
         }
     };
+    //重新调用search方法
     $scope.reloadList = function () {
+        //$scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+        $scope.search($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+    };
+    //重新调用search方法。更改当前页为1
+    $scope.reloadList2 = function () {
+        //$scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+        $scope.paginationConf.currentPage = 1;
+        $scope.search($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+    };
+    //重新调用search方法。 设置查询对象为空。更改当前页为1
+    $scope.reloadList3 = function () {
+        //$scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+        $scope.searchEntity = {};
+        $scope.paginationConf.currentPage = 1;
+        $scope.search($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+    };
+    //重新调用search方法。设置查询对象为空。
+    $scope.reloadList4 = function () {
+        $scope.searchEntity = {};
         //$scope.findPage($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
         $scope.search($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
     };

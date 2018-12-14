@@ -17,18 +17,6 @@ app.controller("brandController", function ($scope, $http, $controller, brandSer
             $scope.paginationConf.totalItems = response.total;
 
         });
-
-    };
-    //根据分页信息查询
-    $scope.findPage = function (page, rows) {
-        brandService.findPage(page, rows, $scope.searchEntity).success(function (response) {
-            //response 分页结果对象total,rows
-            $scope.list = response.rows;
-            //总记录数
-            $scope.paginationConf.totalItems = response.total;
-
-        });
-
     };
     $scope.add = function () {
         var obj;
@@ -39,7 +27,7 @@ app.controller("brandController", function ($scope, $http, $controller, brandSer
         }
         obj.success(function (response) {
             if (response.success) {
-                $scope.reloadList();
+                $scope.reloadList3();
             } else {
                 alert(response.message);
             }
@@ -59,7 +47,7 @@ app.controller("brandController", function ($scope, $http, $controller, brandSer
         if (confirm("确定要删除选中的记录吗？ ")) {
             brandService.delete($scope.selectedIds).success(function (response) {
                 if (response.success) {
-                    $scope.reloadList();
+                    $scope.reloadList2();
                     $scope.selectedIds = [];
                 } else {
                     alert(response.message)
