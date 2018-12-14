@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd 
+       http://www.springframework.org/schema/security 
+       http://www.springframework.org/schema/security/spring-security.xsd">
+    <!--配置用户认证信息-->
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+                <!--配置用户信息-->
+                <security:user name="admin" password="123" authorities="ROLE_USER"></security:user>
+                <security:user name="root" password="123" authorities="ROLE_USER"></security:user>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+    <!--配置用户授权信息-->
+    <!--配置哪些资源不用登陆就能访问-->
+    <security:http pattern="/login.html" security="none"></security:http>
+    <security:http pattern="/css/**" security="none"></security:http>
+    <security:http pattern="/img/**" security="none"></security:http>
+    <security:http pattern="/js/**" security="none"></security:http>
+    <security:http pattern="/plugins/**" security="none"></security:http>
+    <!--配置用户授权信息
+        auto-config：开启自动配置
+        use-expression：关闭SpEL表达式
+    -->
+    <security:http auto-config="true" use-expressions="false">
+        <security:intercept-url pattern="/**" access="ROLE_USER"></security:intercept-url>
+        <security:form-login login-page="/login.html" default-target-url="/admin/index.html"
+                             authentication-failure-url="/login.html" always-use-default-target="true"></security:form-login>
+        <!--配置关闭请求伪造-->
+        <security:csrf disabled="true"></security:csrf>
+        <!--如果使用了iframe等框架，希望跳转也是在框架内跳转的话-->
+        <security:headers>
+            <security:frame-options policy="SAMEORIGIN"/>
+        </security:headers>
+    </security:http>
+</beans>
