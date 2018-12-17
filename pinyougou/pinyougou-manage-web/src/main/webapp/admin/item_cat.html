@@ -121,12 +121,15 @@
 				<tr>
 		      		<td>上级商品分类</td>
 		      		<td>
-		      		   珠宝 >>  银饰
+						顶级分类
+						<span ng-if="parentId != 0">
+                        >> {{parentName}}
+                        </span>
 		      		</td>
 		      	</tr>
 		      	<tr>
 		      		<td>商品分类名称</td>
-		      		<td><input  class="form-control" placeholder="商品分类名称">  </td>
+		      		<td><input  class="form-control" placeholder="商品分类名称"ng-model="entity.name">  </td>
 		      	</tr>			  
 		      	<tr>
 		      		<td>类型模板</td>

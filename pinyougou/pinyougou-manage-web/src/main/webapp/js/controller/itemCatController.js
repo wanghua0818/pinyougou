@@ -1,10 +1,10 @@
 app.controller("itemCatController", function ($scope, $controller, itemCatService) {
 
     //加载baseController控制器并传入1个作用域，与angularJs运行时作用域相同.
-    $controller("baseController",{$scope:$scope});
+    $controller("baseController", {$scope: $scope});
 
     //加载列表数据
-    $scope.findAll = function(){
+    $scope.findAll = function () {
         itemCatService.findAll().success(function (response) {
             $scope.list = response;
         });
@@ -19,13 +19,13 @@ app.controller("itemCatController", function ($scope, $controller, itemCatServic
 
     $scope.save = function () {
         var object;
-        if($scope.entity.id != null){//更新
+        if ($scope.entity.id != null) {//更新
             object = itemCatService.update($scope.entity);
         } else {//新增
             object = itemCatService.add($scope.entity);
         }
         object.success(function (response) {
-            if(response.success){
+            if (response.success) {
                 $scope.reloadList();
             } else {
                 alert(response.message);
@@ -40,13 +40,13 @@ app.controller("itemCatController", function ($scope, $controller, itemCatServic
     };
 
     $scope.delete = function () {
-        if($scope.selectedIds.length < 1){
+        if ($scope.selectedIds.length < 1) {
             alert("请先选择要删除的记录");
             return;
         }
-        if(confirm("确定要删除已选择的记录吗")){
+        if (confirm("确定要删除已选择的记录吗")) {
             itemCatService.delete($scope.selectedIds).success(function (response) {
-                if(response.success){
+                if (response.success) {
                     $scope.reloadList();
                     $scope.selectedIds = [];
                 } else {
@@ -75,8 +75,9 @@ app.controller("itemCatController", function ($scope, $controller, itemCatServic
     $scope.grade = 1;//默认1级
     $scope.selectList = function (grade, entity) {
         $scope.grade = grade;
-
-        switch (grade){
+        $scope.parentId = entity.id //记录父id
+        $scope.parentName = entity.name
+        switch (grade) {
             case 1:
                 $scope.entity_1 = null;
                 $scope.entity_2 = null;
