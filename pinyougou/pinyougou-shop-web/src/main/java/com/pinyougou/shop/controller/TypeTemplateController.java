@@ -1,4 +1,4 @@
-package com.pinyougou.manage.controller;
+package com.pinyougou.shop.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbTypeTemplate;
@@ -18,15 +18,23 @@ public class TypeTemplateController {
     private TypeTemplateService typeTemplateService;
 
 
-
+    /**
+     * $http.get("../typeTemplate/findSpecList.do?id=" + id);
+     *
+     * @return
+     */
+    @GetMapping("/findSpecList")
+    public List<Map> findSpecList(Long id) {
+        return typeTemplateService.findSpecList(id);
+    }
     @RequestMapping("/findAll")
     public List<TbTypeTemplate> findAll() {
         return typeTemplateService.findAll();
     }
 
     @GetMapping("/findPage")
-    public PageResult findPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                               @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
+    public PageResult findPage(@RequestParam(value = "page", defaultValue = "1")Integer page,
+                               @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
         return typeTemplateService.findPage(page, rows);
     }
 
@@ -70,15 +78,14 @@ public class TypeTemplateController {
 
     /**
      * 分页查询列表
-     *
      * @param typeTemplate 查询条件
-     * @param page         页号
-     * @param rows         每页大小
+     * @param page 页号
+     * @param rows 每页大小
      * @return
      */
     @PostMapping("/search")
-    public PageResult search(@RequestBody TbTypeTemplate typeTemplate, @RequestParam(value = "page", defaultValue = "1") Integer page,
-                             @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
+    public PageResult search(@RequestBody  TbTypeTemplate typeTemplate, @RequestParam(value = "page", defaultValue = "1")Integer page,
+                               @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
         return typeTemplateService.search(page, rows, typeTemplate);
     }
 

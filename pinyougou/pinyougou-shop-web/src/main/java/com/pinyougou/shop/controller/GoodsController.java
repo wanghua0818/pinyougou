@@ -38,11 +38,11 @@ public class GoodsController {
             //设为未审核
             goods.getGoods().setAuditStatus("0");
             goodsService.addGoods(goods);
-            return Result.ok("增加成功");
+            return Result.ok("商品增加成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail("增加失败");
+        return Result.fail("商品增加失败");
     }
 
     @GetMapping("/findOne")
