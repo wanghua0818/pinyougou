@@ -19,14 +19,20 @@ app.controller("itemCatController", function ($scope, $controller, itemCatServic
 
     $scope.save = function () {
         var object;
-        if ($scope.entity.id != null) {//更新
+
+        $scope.entity.typeId = $("#typeTemplateId").val();
+
+        $scope.entity.parentId = $scope.parentId;
+
+        if($scope.entity.id != null){//更新
+
             object = itemCatService.update($scope.entity);
         } else {//新增
             object = itemCatService.add($scope.entity);
         }
         object.success(function (response) {
-            if (response.success) {
-                $scope.reloadList();
+            if(response.success){
+                $scope.findByParentId($scope.parentId);
             } else {
                 alert(response.message);
             }
@@ -69,6 +75,7 @@ app.controller("itemCatController", function ($scope, $controller, itemCatServic
     $scope.findByParentId = function (parentId) {
         itemCatService.findByParentId(parentId).success(function (response) {
             $scope.list = response;
+            $scope.parentId=parentId;
         });
     };
 

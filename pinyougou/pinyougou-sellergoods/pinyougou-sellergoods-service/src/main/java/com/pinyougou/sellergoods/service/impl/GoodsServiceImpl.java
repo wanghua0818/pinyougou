@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.mapper.*;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbGoodsDesc;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.service.impl.BaseServiceImpl;
@@ -13,12 +14,11 @@ import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 @Transactional
 @Service(interfaceClass = GoodsService.class)
 public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsService {
@@ -42,14 +42,90 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         Example example = new Example(TbGoods.class);
         Example.Criteria criteria = example.createCriteria();
-        /*if(!StringUtils.isEmpty(goods.get***())){
-            criteria.andLike("***", "%" + goods.get***() + "%");
-        }*/
+        criteria.andNotEqualTo("isDelete", "1");
+        //商家限定
+        if (!StringUtils.isEmpty(goods.getSellerId())) {
+            criteria.andEqualTo("sellerId", goods.getSellerId());
+        }
+        if (!StringUtils.isEmpty(goods.getGoodsName())) {
+            criteria.andLike("goodsName", "%" + goods.getGoodsName() + "%");
+        }
+        if (!StringUtils.isEmpty(goods.getAuditStatus())) {
+            criteria.andEqualTo("auditStatus", goods.getAuditStatus());
+        }
 
         List<TbGoods> list = goodsMapper.selectByExample(example);
         PageInfo<TbGoods> pageInfo = new PageInfo<>(list);
 
         return new PageResult(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+
+    @Override
+    public Goods findGoods(Long id) {
+        Goods goods = new Goods();
+        TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+        goods.setGoods(tbGoods);
+        TbGoodsDesc goodsDesc = goodsDescMapper.selectByPrimaryKey(id);
+        goods.setGoodsDesc(goodsDesc);
+        //查询商品sku列表
+        Example example = new Example(TbItem.class);
+        example.createCriteria().andEqualTo("goodsId", id);
+        List<TbItem> tbItemList = itemMapper.selectByExample(example);
+        goods.setItemList(tbItemList);
+        return goods;
+    }
+
+    public void updateGoods(Goods goods) {
+        //更新商品信息
+        goods.getGoods().setAuditStatus("0");//更新过后 重新设置为未审核
+        goodsMapper.updateByPrimaryKeySelective(goods.getGoods());
+        goodsDescMapper.updateByPrimaryKeySelective(goods.getGoodsDesc());
+        //删除原有sku列表
+        TbItem param = new TbItem();
+        param.setGoodsId(goods.getGoods().getId());
+        itemMapper.delete(param);
+        //保存新的sku列表
+        saveItemLit(goods);
+    }
+
+    /**
+     * 根据id更新状态
+     *
+     * @param ids
+     * @param status
+     * @return
+     */
+    @Override
+    public void updateByIdsAndStatus(Long[] ids, String status) {
+        TbGoods goods = new TbGoods();
+        goods.setAuditStatus(status);
+        Example example = new Example(TbGoods.class);
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+        goodsMapper.updateByExampleSelective(goods, example);
+    }
+
+    @Override
+    public void deleteGoodsByIds(Long[] ids) {
+        TbGoods param = new TbGoods();
+        param.setIsDelete("1");
+        Example example = new Example(TbGoods.class);
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+        goodsMapper.updateByExampleSelective(param, example);
+    }
+
+    /**
+     * 更新上下架
+     *
+     * @param ids
+     * @param isMarketable
+     */
+    public void updateByIdsAndIsMarketable(Long[] ids, String isMarketable) {
+        TbGoods goods = new TbGoods();
+        goods.setIsMarketable(isMarketable);
+        Example example = new Example(TbGoods.class);
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+        goodsMapper.updateByExampleSelective(goods, example);
     }
 
     @Override
@@ -62,6 +138,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //新增sku商品列表
         saveItemLit(goods);
     }
+
     private void saveItemLit(Goods goods) {
         if ("1".equals(goods.getGoods().getIsEnableSpec())) {
             if (goods.getItemList() != null && goods.getItemList().size() > 0) {
@@ -102,11 +179,6 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         item.setCategory(itemCatMapper.selectByPrimaryKey(goods.getGoods().getCategory3Id()).getName());
         //创建时间
         item.setCreateTime(new Date());
-        //
-        /*if (!StringUtils.isEmpty(goods.getGoodsDesc().getItemImages())) {
-            List<Map> imageList = JSONArray.parseArray(goods.getGoodsDesc().getItemImages(), Map.class);
-            item.setImage(imageList.get(0).get("url").toString());
-        }*/
         //图片
         List<Map> imgList =
                 JSONArray.parseArray(goods.getGoodsDesc().getItemImages(), Map.class);

@@ -15,7 +15,24 @@ public class GoodsController {
 
     @Reference
     private GoodsService goodsService;
-
+    /**
+     * return $http.get("../goods/updateStatus.do?ids=" + selectedIds + "&status=" + status);
+     * 更新状态
+     *
+     * @param ids
+     * @param status
+     * @return
+     */
+    @GetMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status) {
+        try {
+            goodsService.updateByIdsAndStatus(ids, status);
+            return Result.ok("更新成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("更新失败");
+    }
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
         return goodsService.findAll();
@@ -57,7 +74,8 @@ public class GoodsController {
     @GetMapping("/delete")
     public Result delete(Long[] ids) {
         try {
-            goodsService.deleteByIds(ids);
+            //逻辑删除 ，把商品状态改为删除状态
+           goodsService.deleteGoodsByIds(ids);
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();

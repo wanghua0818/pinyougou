@@ -132,8 +132,8 @@ app.controller("goodsController", function ($scope, $controller, $location, good
 
     //读取二级商品分类列表
     $scope.$watch("entity.goods.category1Id", function (newValue, oldValue) {
-        $scope.itemCat3List=[]
-        $scope.typeTemplate ={}
+        $scope.itemCat3List = []
+        $scope.typeTemplate = {}
         if (newValue != undefined) {
             itemCatService.findByParentId(newValue).success(function (response) {
                 $scope.itemCat2List = response;
@@ -258,6 +258,25 @@ app.controller("goodsController", function ($scope, $controller, $location, good
         }
         return false;
     };
+    //修改商品上下架状态
+    //updateMarketable('1')
+    $scope.updateMarketable = function (isMarketable) {
+        if ($scope.selectedIds.length < 1) {
+            alert("请先选择商品");
+            return;
+        }
+        if (confirm("确定要更新选中的商品上下架状态吗？")) {
+            goodsService.updateMarketable($scope.selectedIds, isMarketable).success(function (response) {
+                if (response.success) {
+                    //刷新列表并清空选中的那些商品
+                    $scope.reloadList();
+                    $scope.selectedIds = [];
+                } else {
+                    alert(response.message);
+                }
+            });
+        }
+    }
 
     //修改商品的状态
     $scope.updateStatus = function (status) {

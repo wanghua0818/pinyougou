@@ -18,6 +18,25 @@ public class GoodsController {
     @Reference
     private GoodsService goodsService;
 
+    /**
+     * return $http.get("../goods/updateStatus.do?ids=" + selectedIds + "&status=" + status);
+     * 更新状态
+     *
+     * @param ids
+     * @param status
+     * @return
+     */
+    @GetMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status) {
+        try {
+            goodsService.updateByIdsAndStatus(ids, status);
+            return Result.ok("更新成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("更新失败");
+    }
+
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
         return goodsService.findAll();
@@ -46,20 +65,49 @@ public class GoodsController {
     }
 
     @GetMapping("/findOne")
-    public TbGoods findOne(Long id) {
-        return goodsService.findOne(id);
+    public Goods findOne(Long id) {
+        return goodsService.findGoods(id);
     }
 
+    /**
+     * return $http.post("../goods/update.do",entity);
+     *
+     * @param goods
+     * @return
+     */
     @PostMapping("/update")
-    public Result update(@RequestBody TbGoods goods) {
+    public Result update(@RequestBody Goods goods) {
         try {
-            goodsService.update(goods);
-            return Result.ok("修改成功");
+            //校验商家
+            TbGoods oldGoods = goodsService.findOne(goods.getGoods().getId());
+            String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+            if (oldGoods.getSellerId().equals(sellerId) && sellerId.equals(goods.getGoods().getSellerId())) {
+                goodsService.updateGoods(goods);
+                return Result.ok("修改成功");
+            } else {
+                return Result.ok("违法修改");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Result.fail("修改失败");
     }
+
+    /**
+     * return $http.get("../goods/updateMarketable.do?ids=" + selectedIds + "&isMarketable=+ isMarketable")
+     * @param Long[] ids, String isMarketable)
+     * @return
+     */
+    @GetMapping("/updateMarketable")
+    public Result updateMarketable(Long[] ids, String isMarketable) {
+            try {
+                goodsService.updateByIdsAndIsMarketable(ids, isMarketable);
+                return Result.ok("更新成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return Result.fail("更新失败");
+        }
 
     @GetMapping("/delete")
     public Result delete(Long[] ids) {
@@ -83,7 +131,11 @@ public class GoodsController {
     @PostMapping("/search")
     public PageResult search(@RequestBody TbGoods goods, @RequestParam(value = "page", defaultValue = "1") Integer page,
                              @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
-        return goodsService.search(page, rows, goods);
+
+            //商家只能看到和查询自己的商品
+            String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+            goods.setSellerId(sellerId);
+            return goodsService.search(page, rows, goods);
     }
 
 }
