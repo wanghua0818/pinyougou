@@ -14,7 +14,13 @@ import java.util.List;
 public class ContentController {
     @Reference
     private ContentService contentService;
-    //$http.get("content/findContentListByCategoryId.do?categoryId="+categoryId);
+
+
+    /**
+     * //$http.get("content/findContentListByCategoryId.do?categoryId="+categoryId);
+     * @param categoryId
+     * @return
+     */
     @GetMapping("/findContentListByCategoryId")
     public List<TbContent> findContentListByCategoryId(Long categoryId){
         return contentService.findContentListByCategoryId(categoryId);

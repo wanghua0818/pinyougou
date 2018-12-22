@@ -60,5 +60,19 @@
       <artifactId>fastjson</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <!-- tomcat 插件  -->
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <configuration>
+          <path>/</path>
+          <port>9001</port>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 
 </project>
