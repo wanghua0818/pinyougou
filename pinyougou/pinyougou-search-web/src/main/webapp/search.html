@@ -328,7 +328,7 @@
 											<i>{{item.price.toFixed(2)}}</i>
 										</strong>
 								</div>
-								<div class="attr" style="height: auto">
+								<div class="attr" style="height: auto" ng-bind-html="item.title | trustHtml">
 									<em>{{item.title}}</em>
 								</div>
 								<div class="cu">
