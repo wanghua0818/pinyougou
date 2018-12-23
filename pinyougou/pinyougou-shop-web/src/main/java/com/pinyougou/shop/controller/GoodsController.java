@@ -66,7 +66,8 @@ public class GoodsController {
 
     @GetMapping("/findOne")
     public Goods findOne(Long id) {
-        return goodsService.findGoods(id);
+        Goods goods = goodsService.findGoods(id);
+        return goods;
     }
 
     /**
@@ -95,7 +96,7 @@ public class GoodsController {
 
     /**
      * return $http.get("../goods/updateMarketable.do?ids=" + selectedIds + "&isMarketable=+ isMarketable")
-     * @param Long[] ids, String isMarketable)
+     * @param  ids, String isMarketable)
      * @return
      */
     @GetMapping("/updateMarketable")
