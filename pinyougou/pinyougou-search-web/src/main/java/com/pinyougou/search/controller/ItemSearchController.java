@@ -20,7 +20,7 @@ public class ItemSearchController {
      * @return
      */
     @PostMapping("/search")
-    public Map<String,Object> search(@RequestBody Map<String,String> searchMap){
+    public Map<String,Object> search(@RequestBody Map<String,Object> searchMap){
         return itemSearchService.search(searchMap);
     }
 }

@@ -3,7 +3,6 @@ package com.pinyougou.common.util;
 import org.csource.fastdfs.*;
 
 public class FastDFSClient {
-
     private TrackerClient trackerClient = null;
     private TrackerServer trackerServer = null;
     private StorageClient storageClient = null;
