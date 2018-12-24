@@ -55,7 +55,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             SimpleFilterQuery brandFilterQuery = new SimpleFilterQuery(brandCriteria);
             query.addFilterQuery(brandFilterQuery);
         }
-        //3.商品规则查询条件
+        //3.商品规格查询条件
         if (searchMap.get("spec") != null) {
             Map<String, String> specMap = (Map<String, String>) searchMap.get("spec");
             Set<Map.Entry<String, String>> entries = specMap.entrySet();
@@ -63,6 +63,19 @@ public class ItemSearchServiceImpl implements ItemSearchService {
                 Criteria specCriteria = new Criteria("item_spec_" + entry.getKey()).is(entry.getValue());
                 SimpleFilterQuery specFilterQuery = new SimpleFilterQuery(specCriteria);
                 query.addFilterQuery(specFilterQuery);
+            }
+        }
+        //价格过滤查询
+        if (!StringUtils.isEmpty(searchMap.get("price"))) {
+            String[] prices = searchMap.get("price").toString().split("-");
+            //创建过滤查询对象
+            Criteria startCriteria = new Criteria("item_price").greaterThanEqual(prices[0]);
+            SimpleFilterQuery smallSimpleFilterQuery = new SimpleFilterQuery(startCriteria);
+            query.addFilterQuery(smallSimpleFilterQuery);
+            if (!"*".equals(prices[1])) {
+                Criteria endCriteria = new Criteria("item_price").lessThanEqual(prices[1]);
+                SimpleFilterQuery endSimpleFilterQuery = new SimpleFilterQuery(endCriteria);
+                query.addFilterQuery(endSimpleFilterQuery);
             }
         }
         HighlightPage<TbItem> highlightPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
