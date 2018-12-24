@@ -5,6 +5,7 @@ import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import javafx.scene.input.InputMethodTextRun;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
@@ -91,6 +92,15 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         }
         query.setOffset((pageNo - 1) * pageSize);
         query.setRows(pageSize);
+        //处理排序
+        if (!StringUtils.isEmpty(searchMap.get("sortField")) && !StringUtils.isEmpty(searchMap.get("sort"))) {
+            //排序的域
+            String sortField = searchMap.get("sortField").toString();
+            //排序的顺序
+            String sortOrder = searchMap.get("sort").toString();
+            Sort sort = new Sort("DESC".equals(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC, "item_" + sortField);
+            query.addSort(sort);
+        }
         HighlightPage<TbItem> highlightPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
         //处理高亮标题
         List<HighlightEntry<TbItem>> highlighted = highlightPage.getHighlighted();
@@ -108,8 +118,8 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         }
         //设置返回的商品列表
         resultMap.put("rows", highlightPage.getContent());
-        resultMap.put("totalPages",highlightPage.getTotalPages());
-        resultMap.put("total",highlightPage.getTotalElements());
+        resultMap.put("totalPages", highlightPage.getTotalPages());
+        resultMap.put("total", highlightPage.getTotalElements());
         return resultMap;
     }
 }

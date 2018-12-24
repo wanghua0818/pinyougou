@@ -294,23 +294,23 @@
             <div class="sui-navbar">
                 <div class="navbar-inner filter">
                     <ul class="sui-nav">
-                        <li class="active">
-                            <a href="#">综合</a>
+                        <li class="{{searchMap.sortField==''?'active':''}}">
+                            <a href="#" ng-click="sortSearch('','')">综合</a>
                         </li>
                         <li>
                             <a href="#">销量</a>
                         </li>
-                        <li>
-                            <a href="#">新品</a>
+                        <li class="{{searchMap.sortField=='updateTime'?'active':''}}">
+                            <a href="#" ng-click="sortSearch('updateTime','DESC')">新品</a>
                         </li>
                         <li>
                             <a href="#">评价</a>
                         </li>
-                        <li>
-                            <a href="#">价格↑</a>
+                        <li class="{{searchMap.sortField=='updateTime'&& searchMap.sort=='ASC'?'active':''}}">
+                            <a href="#" ng-click="sortSearch('price','ASC')">价格↑</a>
                         </li>
-                        <li>
-                            <a href="#">价格↓</a>
+                        <li class="{{searchMap.sortField=='updateTime'&& searchMap.sort=='DESC'?'active':''}}">
+                            <a href="#" ng-click="sortSearch('price','DESC')">价格↓</a>
                         </li>
                     </ul>
                 </div>

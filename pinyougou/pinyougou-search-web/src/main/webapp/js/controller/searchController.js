@@ -1,6 +1,6 @@
 app.controller("searchController", function ($scope, searchService) {
     //定义一个搜索条件对象
-    $scope.searchMap = {"keywords": "", "category": "", "brand": "", "spec": {}, "price": "", "pageNo": 1, "pageSize": 20}
+    $scope.searchMap = {"keywords": "", "category": "", "brand": "", "spec": {}, "price": "", "pageNo": 1, "pageSize": 20, "sortField": "", "sort": ""}
     $scope.search = function () {
         searchService.search($scope.searchMap).success(function (response) {
             $scope.resultMap = response;
@@ -16,7 +16,7 @@ app.controller("searchController", function ($scope, searchService) {
         }
 
         //重新搜索
-        $scope.searchMap.pageNo=1;
+        $scope.searchMap.pageNo = 1;
         $scope.search();
     }
     //撤销过滤条件
@@ -27,7 +27,7 @@ app.controller("searchController", function ($scope, searchService) {
             delete $scope.searchMap.spec[key]
         }
         //重新搜索
-        $scope.searchMap.pageNo=1;
+        $scope.searchMap.pageNo = 1;
         $scope.search();
     }
     //构建页面分页导航条信息
@@ -79,12 +79,18 @@ app.controller("searchController", function ($scope, searchService) {
     $scope.isCurrentPage = function (pn) {
         return $scope.searchMap.pageNo == pn;
     }
-    //查询指定页数
+    //查询指定页数 ,跳转到指定的页面
     $scope.queryByPageNo = function (pageNo) {
         pageNo = parseInt(pageNo)
         if (pageNo > 0 && pageNo <= $scope.resultMap.totalPages) {
             $scope.searchMap.pageNo = pageNo;
             $scope.search();
         }
+    }
+    //设置排序
+    $scope.sortSearch = function (sortField, sort) {
+        $scope.searchMap.sortField = sortField;
+        $scope.searchMap.sort = sort;
+        $scope.search();
     }
 })
