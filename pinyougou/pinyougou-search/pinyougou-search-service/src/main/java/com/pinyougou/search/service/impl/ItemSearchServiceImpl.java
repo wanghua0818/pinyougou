@@ -78,6 +78,19 @@ public class ItemSearchServiceImpl implements ItemSearchService {
                 query.addFilterQuery(endSimpleFilterQuery);
             }
         }
+        //设置分页信息
+        //页号
+        int pageNo = 1;
+        if (!StringUtils.isEmpty(searchMap.get("pageNo"))) {
+            pageNo = Integer.parseInt(searchMap.get("pageNo").toString());
+        }
+        //页大小
+        int pageSize = 20;
+        if (!StringUtils.isEmpty(searchMap.get("pageSize"))) {
+            pageSize = Integer.parseInt(searchMap.get("pageSize").toString());
+        }
+        query.setOffset((pageNo - 1) * pageSize);
+        query.setRows(pageSize);
         HighlightPage<TbItem> highlightPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
         //处理高亮标题
         List<HighlightEntry<TbItem>> highlighted = highlightPage.getHighlighted();
@@ -95,6 +108,8 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         }
         //设置返回的商品列表
         resultMap.put("rows", highlightPage.getContent());
+        resultMap.put("totalPages",highlightPage.getTotalPages());
+        resultMap.put("total",highlightPage.getTotalElements());
         return resultMap;
     }
 }
