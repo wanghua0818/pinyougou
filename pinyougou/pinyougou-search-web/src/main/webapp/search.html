@@ -15,7 +15,7 @@
     <script src="js/service/searchService.js"></script>
     <script src="js/controller/searchController.js"></script>
 </head>
-<body ng-app="pinyougou" ng-controller="searchController" ng-init="">
+<body ng-app="pinyougou" ng-controller="searchController" ng-init="loadKeyWords()">
 <!-- 头部栏位 -->
 <!--页面顶部-->
 <div id="nav-bottom">
@@ -294,22 +294,22 @@
             <div class="sui-navbar">
                 <div class="navbar-inner filter">
                     <ul class="sui-nav">
-                        <li class="{{searchMap.sortField==''?'active':''}}">
+                        <li class="{{(searchMap.sortField=='')?'active':''}}">
                             <a href="#" ng-click="sortSearch('','')">综合</a>
                         </li>
                         <li>
-                            <a href="#">销量</a>
+                            <a href="#" ng-click="sortSearch('','')">销量</a>
                         </li>
-                        <li class="{{searchMap.sortField=='updateTime'?'active':''}}">
+                        <li class="{{(searchMap.sortField=='updateTime')?'active':''}}">
                             <a href="#" ng-click="sortSearch('updateTime','DESC')">新品</a>
                         </li>
                         <li>
                             <a href="#">评价</a>
                         </li>
-                        <li class="{{searchMap.sortField=='updateTime'&& searchMap.sort=='ASC'?'active':''}}">
+                        <li class="{{(searchMap.sortField=='price'&& searchMap.sort=='ASC')?'active':''}}">
                             <a href="#" ng-click="sortSearch('price','ASC')">价格↑</a>
                         </li>
-                        <li class="{{searchMap.sortField=='updateTime'&& searchMap.sort=='DESC'?'active':''}}">
+                        <li class="{{(searchMap.sortField=='price'&& searchMap.sort=='DESC')?'active':''}}">
                             <a href="#" ng-click="sortSearch('price','DESC')">价格↓</a>
                         </li>
                     </ul>
@@ -357,7 +357,7 @@
                             <a href="#" ng-click="queryByPageNo(pn)">{{pn}}</a>
                         </li>
                         <li class="dotted" ng-if="backDot"><span>...</span></li>
-                        <li class="next{{(searchMap.pageNo<resultMap.totalPages)?'':'disabled'}}">
+                        <li class="next {{(searchMap.pageNo<resultMap.totalPages)?'':'disabled'}}">
                             <a href="#" ng-click="queryByPageNo(searchMap.pageNo+1)">下一页»</a>
                         </li>
                     </ul>

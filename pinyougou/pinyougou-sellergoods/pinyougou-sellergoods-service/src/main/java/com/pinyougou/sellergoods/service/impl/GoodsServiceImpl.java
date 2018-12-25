@@ -103,6 +103,18 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         Example example = new Example(TbGoods.class);
         example.createCriteria().andIn("id", Arrays.asList(ids));
         goodsMapper.updateByExampleSelective(goods, example);
+        //不仅要修改商品的审核状态为审核通过而且需要将这些spu id对应的那些sku的状态修改为已启用（1）。
+        if ("2".equals(status)) {
+            //根据商品spu id数组修改对于的sku 的状态为1
+            //update tb_item set status=1 where goods_id in (?,?,,,);
+            TbItem item = new TbItem();
+            item.setStatus("1");
+
+            Example itemExample = new Example(TbItem.class);
+            itemExample.createCriteria().andIn("goodsId", Arrays.asList(ids));
+
+            itemMapper.updateByExampleSelective(item, itemExample);
+        }
     }
 
     @Override
@@ -126,6 +138,16 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         Example example = new Example(TbGoods.class);
         example.createCriteria().andIn("id", Arrays.asList(ids));
         goodsMapper.updateByExampleSelective(goods, example);
+    }
+
+    @Override
+    public List<TbItem> findItemGoodsByGoodsIdAndStatus(Long[] ids, String s) {
+        Example example = new Example(TbItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("status", s);
+        criteria.andIn("goodsId", Arrays.asList(ids));
+        List<TbItem> itemList = itemMapper.selectByExample(example);
+        return itemList;
     }
 
     @Override

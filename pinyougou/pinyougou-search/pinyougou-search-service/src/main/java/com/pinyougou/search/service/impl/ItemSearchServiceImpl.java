@@ -1,6 +1,7 @@
 package com.pinyougou.search.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import javafx.scene.input.InputMethodTextRun;
@@ -27,14 +28,17 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         Map<String, Object> resultMap = new HashMap<>();
         // SimpleQuery query = new SimpleQuery();
         //创建高亮搜索对象
-
+        Criteria criteria = null;
         //处理空格
         if (!StringUtils.isEmpty(searchMap.get("keywords"))) {
             searchMap.put("keywords", searchMap.get("keywords").toString().replaceAll(" ", ""));
+            //设置查询条件
+            criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
+        } else {
+            criteria = new Criteria("item_keywords");
         }
         SimpleHighlightQuery query = new SimpleHighlightQuery();
-        //设置查询条件
-        Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
+
         query.addCriteria(criteria);
         //设置高亮
         HighlightOptions highlightOptions = new HighlightOptions();
@@ -121,5 +125,33 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         resultMap.put("totalPages", highlightPage.getTotalPages());
         resultMap.put("total", highlightPage.getTotalElements());
         return resultMap;
+    }
+
+    /**
+     * 导入更新后的商品列表到solr中
+     *
+     * @param itemList
+     */
+    @Override
+    public void importItemList(List<TbItem> itemList) {
+        for (TbItem tbItem : itemList) {
+            Map specMap = JSON.parseObject(tbItem.getSpec(), Map.class);
+            tbItem.setSpecMap(specMap);
+        }
+        solrTemplate.saveBeans(itemList);
+        solrTemplate.commit();
+    }
+
+    /**
+     * 根据商品id集合删除对应其在solr索引库的数据
+     *
+     * @param goodsIdList
+     */
+    @Override
+    public void deleteItemListByGoodsIdList(List<Long> goodsIdList) {
+        Criteria criteria = new Criteria("item_goodsid").in(goodsIdList);
+        SimpleQuery query = new SimpleQuery(criteria);
+        solrTemplate.delete(query);
+        solrTemplate.commit();
     }
 }

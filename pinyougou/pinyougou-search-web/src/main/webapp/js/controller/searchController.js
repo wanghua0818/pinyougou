@@ -1,4 +1,4 @@
-app.controller("searchController", function ($scope, searchService) {
+app.controller("searchController", function ($scope,$location, searchService) {
     //定义一个搜索条件对象
     $scope.searchMap = {"keywords": "", "category": "", "brand": "", "spec": {}, "price": "", "pageNo": 1, "pageSize": 20, "sortField": "", "sort": ""}
     $scope.search = function () {
@@ -91,6 +91,11 @@ app.controller("searchController", function ($scope, searchService) {
     $scope.sortSearch = function (sortField, sort) {
         $scope.searchMap.sortField = sortField;
         $scope.searchMap.sort = sort;
+        $scope.search();
+    }
+    //页面跳转处理
+    $scope.loadKeyWords=function () {
+        $scope.searchMap.keywords = $location.search()["keywords"];
         $scope.search();
     }
 })

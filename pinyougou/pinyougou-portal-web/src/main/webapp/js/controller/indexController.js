@@ -11,6 +11,9 @@ app.controller("indexController", function ($scope, contentService) {
 
     //根据搜索关键字跳转到搜索系统进行搜索
     $scope.search = function () {
-        location.href= "http://search.pinyougou.com/search.html#?keywords=" + $scope.keywords;
+        if ($scope.keywords == undefined) {
+            $scope.keywords = " ";
+        }
+        location.href = "http://search.pinyougou.com/search.html#?keywords=" + $scope.keywords;
     };
 });
