@@ -12,6 +12,15 @@
 
     <groupId>com.itheima</groupId>
     <artifactId>itheima-freemarker</artifactId>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
