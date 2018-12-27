@@ -63,17 +63,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
     @Override
     public Goods findGoods(Long id) {
-        Goods goods = new Goods();
-        TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
-        goods.setGoods(tbGoods);
-        TbGoodsDesc goodsDesc = goodsDescMapper.selectByPrimaryKey(id);
-        goods.setGoodsDesc(goodsDesc);
-        //查询商品sku列表
-        Example example = new Example(TbItem.class);
-        example.createCriteria().andEqualTo("goodsId", id);
-        List<TbItem> tbItemList = itemMapper.selectByExample(example);
-        goods.setItemList(tbItemList);
-        return goods;
+
+        return findGoodsById(id, null);
     }
 
     public void updateGoods(Goods goods) {
@@ -148,6 +139,26 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         criteria.andIn("goodsId", Arrays.asList(ids));
         List<TbItem> itemList = itemMapper.selectByExample(example);
         return itemList;
+    }
+
+    @Override
+    public Goods findGoodsById(Long id, String status) {
+        Goods goods = new Goods();
+        TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+        goods.setGoods(tbGoods);
+        TbGoodsDesc goodsDesc = goodsDescMapper.selectByPrimaryKey(id);
+        goods.setGoodsDesc(goodsDesc);
+        //查询商品sku列表
+        Example example = new Example(TbItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("goodsId", id);
+        if (!StringUtils.isEmpty(status)) {
+            criteria.andEqualTo("status", status);
+        }
+        example.orderBy("isDefault").desc();
+        List<TbItem> tbItemList = itemMapper.selectByExample(example);
+        goods.setItemList(tbItemList);
+        return goods;
     }
 
     @Override
