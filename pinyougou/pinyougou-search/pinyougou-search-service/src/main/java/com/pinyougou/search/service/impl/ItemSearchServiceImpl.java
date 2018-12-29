@@ -61,7 +61,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         }
         //3.商品规格查询条件
         if (searchMap.get("spec") != null) {
-            Map<String, String> specMap = (Map<String, String>) searchMap.get("spec");
+           Map<String, String> specMap = (Map<String, String>) searchMap.get("spec");
             Set<Map.Entry<String, String>> entries = specMap.entrySet();
             for (Map.Entry<String, String> entry : entries) {
                 Criteria specCriteria = new Criteria("item_spec_" + entry.getKey()).is(entry.getValue());
@@ -141,8 +141,8 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         solrTemplate.commit();
     }
 
-    /**
-     * 根据商品id集合删除对应其在solr索引库的数据
+
+     /* 根据商品id集合删除对应其在solr索引库的数据
      *
      * @param goodsIdList
      */

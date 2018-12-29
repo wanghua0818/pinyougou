@@ -9,6 +9,6 @@
 
     <dubbo:protocol name="dubbo" port="20882"></dubbo:protocol>
     <dubbo:application name="pinyougou-search-service"/>
-    <dubbo:registry address="zookeeper://192.168.12.168:2181"/>
+    <dubbo:registry address="zookeeper://192.168.12.168:2181" />
     <dubbo:annotation package="com.pinyougou.search.service.impl"></dubbo:annotation>
 </beans>
