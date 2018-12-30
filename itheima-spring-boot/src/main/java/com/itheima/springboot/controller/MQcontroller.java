@@ -18,9 +18,11 @@ public class MQcontroller {
     @GetMapping("/send")
     public String sendMsg() {
         Map<String, Object> msgMap = new HashMap<>();
-        msgMap.put("id", 123);
-        msgMap.put("name", "stone");
-        jmsMessagingTemplate.convertAndSend("springboot_queue", msgMap);
+        msgMap.put("mobile","18813961853");
+        msgMap.put("signName", "黑马");
+        msgMap.put("templateCode", "SMS_125018593");
+        msgMap.put("templateParam", "{\"code\":\"123456\"}");
+        jmsMessagingTemplate.convertAndSend("itcast_sms_queue", msgMap);
         return "发送消息完成";
     }
 }
