@@ -8,10 +8,13 @@ import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
 @RequestMapping("/user")
@@ -20,6 +23,15 @@ public class UserController {
 
     @Reference
     private UserService userService;
+
+    //user/getUsername.do
+    @GetMapping("/getUsername")
+    public Map<String, Object> getUsername() {
+        Map<String, Object> map = new HashMap<>();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        map.put("username", username);
+        return map;
+    }
 
     @RequestMapping("/findAll")
     public List<TbUser> findAll() {
@@ -34,15 +46,15 @@ public class UserController {
 
     //return $http.post("user/add.do?smsCode=" + smsCode, entity);
     @PostMapping("/add")
-    public Result add(@RequestBody TbUser user,String smsCode) {
+    public Result add(@RequestBody TbUser user, String smsCode) {
         try {
-            if (userService.checkChode(user.getPhone(),smsCode)){
+            if (userService.checkChode(user.getPhone(), smsCode)) {
                 user.setCreated(new Date());
                 user.setUpdated(user.getCreated());
                 user.setPassword(DigestUtils.md5Hex(user.getPassword()));
                 userService.add(user);
                 return Result.ok("注册成功");
-            }else {
+            } else {
                 return Result.fail("验证码不正确");
             }
 

@@ -63,6 +63,12 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-oxm:4.3.13.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context-support:4.3.10.RELEASE" />
           <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.25" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-cas:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.jasig.cas.client:cas-client-core:3.4.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

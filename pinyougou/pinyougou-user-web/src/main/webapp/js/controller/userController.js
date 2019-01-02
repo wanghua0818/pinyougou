@@ -2,11 +2,12 @@ app.controller("userController", function ($scope, $controller, userService) {
 
     $scope.entity = {"username": "", "password": "", "phone": ""};
     $scope.register = function () {
-        if ($scope.entity.username == "") {
+
+        if ($scope.entity.username == undefined ||$scope.entity.username == "") {
             alert("请输入用户名");
             return;
         }
-        if ($scope.entity.password == "") {
+        if ($scope.entity.password == undefined ||$scope.entity.password == "") {
             alert("请输入密码");
             return;
         }
@@ -16,8 +17,12 @@ app.controller("userController", function ($scope, $controller, userService) {
             return;
         }
 
-        if ($scope.entity.phone == "") {
+        if ($scope.entity.phone == undefined ||$scope.entity.phone == "") {
             alert("请输入手机号");
+            return;
+        }
+        if ($scope.smsCode == undefined ||$scope.smsCode == "") {
+            alert("请输入验证码");
             return;
         }
         userService.register($scope.entity, $scope.smsCode).success(function (response) {

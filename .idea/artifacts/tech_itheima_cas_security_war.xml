@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="tech.itheima-cas-security:war">
+    <output-path>$PROJECT_DIR$/itheima-cas-security/target</output-path>
+    <root id="archive" name="itheima-cas-security-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="tech.itheima-cas-security:war exploded" />
+    </root>
+  </artifact>
+</component>
