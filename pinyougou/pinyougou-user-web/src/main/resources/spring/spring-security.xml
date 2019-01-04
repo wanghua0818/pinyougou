@@ -13,6 +13,7 @@
     <http pattern="/fonts/**" security="none"/>
     <http pattern="/js/**" security="none"/>
     <http pattern="/plugins/**" security="none"/>
+    <http pattern="/img/**" security="none"/>
     <http pattern="/register.html" security="none"/>
     <http pattern="/user/add.do" security="none"/>
     <http pattern="/user/sendSmsCode.do" security="none"/>
