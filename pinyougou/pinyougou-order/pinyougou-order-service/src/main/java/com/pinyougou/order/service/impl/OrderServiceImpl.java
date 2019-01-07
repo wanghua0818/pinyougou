@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -110,7 +111,7 @@ public class OrderServiceImpl extends BaseServiceImpl<TbOrder> implements OrderS
                 outTradeNo = idWorker.nextId() + "";
                 payLog.setOrderList(orderIds);
                 payLog.setCreateTime(new Date());
-                payLog.setTotalFee((long) totalFee * 100);
+                payLog.setTotalFee((long) (totalFee * 100));
                 payLog.setUserId(order.getUserId());
                 payLog.setOutTradeNo(outTradeNo);
                 payLog.setTradeState("0");
@@ -123,5 +124,29 @@ public class OrderServiceImpl extends BaseServiceImpl<TbOrder> implements OrderS
         }
         //5、返回支付日志 id；如果不是微信支付则返回空
         return outTradeNo;
+    }
+
+    //根据支付日志id,查找支付日志信息
+    @Override
+    public TbPayLog findPayLogByOutTradeNo(String outTradeNo) {
+        TbPayLog payLog = payLogMapper.selectByPrimaryKey(outTradeNo);
+        return payLog;
+    }
+
+    @Override
+    public void updateOrderStatus(String outTradeNo, String transactionId) {
+        TbPayLog payLog = findPayLogByOutTradeNo(outTradeNo);
+        payLog.setTradeState("1");//已支付
+        payLog.setPayTime(new Date());
+        payLog.setTransactionId(transactionId);
+        payLogMapper.updateByPrimaryKeySelective(payLog);
+        //2.更新支付日志中对应的每一笔订单的支付状态
+        String[] orderIds = payLog.getOrderList().split(",");
+        TbOrder order = new TbOrder();
+        order.setPaymentTime(new Date());
+        order.setStatus("2");
+        Example example = new Example(TbOrder.class);
+        example.createCriteria().andIn("orderId", Arrays.asList(orderIds));
+        orderMapper.updateByExampleSelective(order, example);
     }
 }
