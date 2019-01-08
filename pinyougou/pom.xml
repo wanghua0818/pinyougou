@@ -28,6 +28,8 @@
         <module>pinyougou-cart-web</module>
         <module>pinyougou-order</module>
         <module>pinyougou-pay</module>
+        <module>pinyougou-seckill</module>
+        <module>pinyougou-seckill-web</module>
     </modules>
     <!-- 集中定义依赖版本号 -->
     <properties>
